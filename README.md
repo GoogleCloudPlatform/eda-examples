@@ -19,17 +19,55 @@ production-worthy infrastructure implementation.
 
 ![placeholder architectural diagram](images/all-on-cloud.png)
 
-## Setup
+## Costs
 
-### Google Cloud
+If you run the example commands below, you will use billable components of
+Google Cloud Platform, including:
 
-    [GCP account and project creation boilerplate]
+- Compute Engine
+- Cloud Filestore
 
-### Cloudshell
+You can use the
+[Pricing Calculator](https://cloud.google.com/products/calculator)
+to generate a cost estimate based on your projected usage.
 
-Open a Cloudshell
 
-### Example source
+## Before you begin
+
+Start by opening
+[https://console.cloud.google.com/](https://console.cloud.google.com/)
+in a browser.
+
+Create a new GCP Project using the
+[Cloud Resource Manager](https://console.cloud.google.com/cloud-resource-manager).
+The project you create is just for this example, so you'll delete it below
+when you're done.
+
+You will need to
+[enable billing](https://support.google.com/cloud/answer/6293499#enable-billing)
+for this project.
+
+You will also need to enable the Compute Engine (GCE) service for this account
+
+[Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,cloudresourcemanager.googleapis.com)
+    
+Next, make sure the project you just created is selected in the top of the
+Cloud Console.
+
+Then open a Cloud Shell associated with the project you just created
+
+[Launch Cloud Shell](https://console.cloud.google.com/?cloudshell=true)
+
+It's important that the current Cloud Shell project is the one you just
+created.  Verify that
+
+    echo $GOOGLE_CLOUD_PROJECT
+
+shows that new project.
+
+All example commands below run from this Cloud Shell.
+
+## Example source
 
 Get the source
 
@@ -39,7 +77,7 @@ Get the source
 All example commands below are relative to this top-level directory of the
 examples repo.
 
-### Tools
+## Tools
 
 We use [Terraform](terraform.io) for these examples and the latest version is
 already installed in your GCP Cloudshell.
