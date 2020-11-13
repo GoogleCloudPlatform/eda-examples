@@ -1,3 +1,5 @@
+tmp/
+
 # Local .terraform directories
 **/.terraform/*
 
