@@ -73,6 +73,7 @@ Get the source
 
     git clone <this_repo_url>
     cd gcp-eda-examples
+    git submodule update --init
 
 All example commands below are relative to this top-level directory of the
 examples repo.
