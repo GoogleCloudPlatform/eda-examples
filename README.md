@@ -164,8 +164,8 @@ Next spin up the cluster.
 Still within the Slurm basic example directory above, run
 
     terraform init
-    terraform plan
-    terraform apply
+    terraform plan -var-file basic.tfvars
+    terraform apply -var-file basic.tfvars
 
 and wait for the resources to be created.
 
