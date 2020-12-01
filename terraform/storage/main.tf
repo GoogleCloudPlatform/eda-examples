@@ -16,10 +16,10 @@
 resource "google_filestore_instance" "tools" {
   name = "tools"
   zone = var.zone
-  tier = "PREMIUM"
+  tier = "BASIC_HDD"
 
   file_shares {
-    capacity_gb = 3000
+    capacity_gb = 1000
     name        = "tools"
   }
 
@@ -32,10 +32,10 @@ resource "google_filestore_instance" "tools" {
 resource "google_filestore_instance" "home" {
   name = "home"
   zone = var.zone
-  tier = "PREMIUM"
+  tier = "BASIC_HDD"
 
   file_shares {
-    capacity_gb = 3000
+    capacity_gb = 1000
     name        = "home"
 
     #nfs_export_options {
