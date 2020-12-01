@@ -49,7 +49,7 @@ for this project.
 
 You will also need to enable the Compute Engine (GCE) service for this account
 
-[Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,cloudresourcemanager.googleapis.com)
+[Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,file.googleapis.com,cloudresourcemanager.googleapis.com)
     
 Next, make sure the project you just created is selected in the top of the
 Cloud Console.
