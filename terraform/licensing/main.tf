@@ -37,6 +37,8 @@ resource "google_compute_instance" "license-server" {
 
   network_interface {
     network = var.network
+
+    access_config {} # ephemeral public IP... comment this out for private-only networking
   }
 
   metadata_startup_script = file("provision.sh")
