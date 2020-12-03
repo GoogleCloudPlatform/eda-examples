@@ -1,4 +1,4 @@
-cluster_name = "piton"
+cluster_name = "edafarm"
 project      = "<project>"
 zone         = "us-central1-f"
 

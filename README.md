@@ -262,6 +262,26 @@ You can set the time a compute node sits idle using `suspend_time` in the
 `basic.tfvars` cluster config.
 
 
+## Run an EDA job
+
+From the login node, download an example design project from
+
+    wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+
+Extract this
+
+    tar xzvf openpiton-19-10-23-r13.tar.gz
+    cd openpiton-openpiton-19-10-23-r13
+
+And you can execute this using
+
+    sims -executor slurm tiles
+
+which will kick off jobs across the cluster.
+    
+You can use `sinfo` and `squeue` to see progress.
+
+
 ## Cleaning up
 
 To avoid incurring charges to your Google Cloud Platform account for the
