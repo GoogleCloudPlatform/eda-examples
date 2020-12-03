@@ -19,7 +19,7 @@ resource "google_filestore_instance" "tools" {
   tier = "BASIC_HDD"
 
   file_shares {
-    capacity_gb = 1000
+    capacity_gb = 1024
     name        = "tools"
   }
 
@@ -35,7 +35,7 @@ resource "google_filestore_instance" "home" {
   tier = "BASIC_HDD"
 
   file_shares {
-    capacity_gb = 1000
+    capacity_gb = 1024
     name        = "home"
 
     #nfs_export_options {
