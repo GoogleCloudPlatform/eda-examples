@@ -102,7 +102,7 @@ dependencies can be installed using `provision.sh` during instance creation.
 Create two NFS volumes using Google Cloud Filestore.  One for `/home` (3TB) and
 one for `/tools` (3TB).
 
-    cd terraform/storage
+    cd ../storage
     terraform init
     terraform plan
     terraform apply
@@ -117,7 +117,7 @@ dynamically in GCP.
 
 Change to the slurm "basic" example directory
 
-    cd terraform/slurm-gcp/tf/examples/basic
+    cd ../modules/slurm-gcp/tf/examples/basic
 
 Edit `basic.tfvars` to set the missing GCP project name (required) at the top
 
@@ -159,6 +159,28 @@ to read
 
 Note the IP addresses for the NFS volumes come from the output of the "storage"
 steps above.
+
+In order for the cluster nodes to see the Filestore volumes we created above,
+the cluster needs to be configured to use the `default` network.  In `basic.tfvars`
+uncomment the following lines
+
+    # network_name    = "<existing network name>"
+    # subnetwork_name = "<existing subnetwork name>"
+
+and change them to read
+
+    network_name    = "default"
+    subnetwork_name = "default"
+
+You also need to edit the `partitions` section below to be sure the
+
+    vpc_subnet           = null
+
+is set to
+
+    vpc_subnet           = "default"
+
+as well.
 
 Next spin up the cluster.
 Still within the Slurm basic example directory above, run
