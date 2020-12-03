@@ -1,3 +1,0 @@
-[submodule "terraform/slurm-gcp"]
-	path = terraform/slurm-gcp
-	url = https://github.com/schedmd/slurm-gcp
