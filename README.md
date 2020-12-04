@@ -273,9 +273,9 @@ Extract this
     tar xzvf openpiton-19-10-23-r13.tar.gz
     cd openpiton-openpiton-19-10-23-r13
 
-And you can execute this using
+And you can execute this across the slurm cluster using
 
-    sims -executor slurm tiles
+    sims -sim type=icv -group=tile1 mini -slurm -sim_q_command=sbatch
 
 which will kick off jobs across the cluster.
     
