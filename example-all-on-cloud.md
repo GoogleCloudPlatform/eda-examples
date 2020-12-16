@@ -23,6 +23,9 @@ You can use the
 [Pricing Calculator](https://cloud.google.com/products/calculator)
 to generate a cost estimate based on your projected usage.
 
+Check out the [Google Cloud Free
+Program](https://cloud.google.com/free/docs/gcp-free-tier) for potential
+credits for tutorial resources.
 
 ## Before you begin
 
@@ -63,8 +66,8 @@ All example commands below run from this Cloud Shell.
 
 Get the source
 
-    git clone <this_repo_url>
-    cd gcp-eda-examples
+    git clone https://github.com/GoogleCloudPlatform/eda-examples
+    cd eda-examples
 
 All example commands below are relative to this top-level directory of the
 examples repo.
@@ -87,6 +90,8 @@ Create an instance used to run a license manager in GCP.
 This creates an example instance and shows how license manager binaries and
 dependencies can be installed using `provision.sh` during instance creation.
 
+Note that [Sole-Tenant Nodes](https://cloud.google.com/sole-tenant-nodes)
+are available and commonly used for license and key-management servers.
 
 ## Create NFS volumes
 
@@ -155,7 +160,7 @@ process:
   a compute image template.  This is what you did immediately above and should
   take only a minute or two.  Slurm is _not_ ready to use yet.
 
-- Wait for Slurm to creating a compute node template.  This will be used to
+- Wait for Slurm to create a compute node template.  This will be used to
   dynamically create cluster compute nodes on demand.
 
   At startup, Slurm creates GCP VM images for compute nodes based on custom
@@ -168,7 +173,7 @@ process:
 
 ## Run Slurm jobs
 
-Log into one of the Slurm login nodes
+Log into the Slurm login node
 
     gcloud compute ssh <cluster_name>-login0 --zone <zone>
 
@@ -256,6 +261,11 @@ You can set the time a compute node sits idle using `suspend_time` in the
 
 ## Run an EDA job
 
+Once the cluster is up, you are ready to run EDA jobs. For this example, we
+will be running an open source functional verification regression. Further, we
+also use an open source simulator (Icarus) that has been pre-installed in the
+image.
+
 From the login node, download an example design project from
 
     wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
@@ -267,7 +277,7 @@ Extract this
 
 And you can execute this across the slurm cluster using
 
-    sims -sim type=icv -group=tile1 mini -slurm -sim_q_command=sbatch
+    sims -sim_type=icv -group=tile1_mini -slurm -sim_q_command=sbatch
 
 which will kick off jobs across the cluster.
     
