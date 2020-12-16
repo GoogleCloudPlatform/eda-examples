@@ -277,7 +277,7 @@ Extract this
 
 And you can execute this across the slurm cluster using
 
-    sims -sim type=icv -group=tile1_mini -slurm -sim_q_command=sbatch
+    sims -sim_type=icv -group=tile1_mini -slurm -sim_q_command=sbatch
 
 which will kick off jobs across the cluster.
     
