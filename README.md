@@ -1,17 +1,17 @@
 # EDA Workloads on Google Cloud
 
 Here are examples of template snippets used to spin up Google Cloud resources
-for EDA workloads.
+for typical EDA workloads.
 
 Examples include:
 
 - [All on Cloud](example-all-on-cloud.md)
 - Burst to Cloud (TBD)
 
-Please note that these are provided only as examples to help guide
+**Please note that these are provided only as examples to help guide
 infrastructure planning and are not intended for use in production. They are
 deliberately simplified for clarity and lack significant details required for
-production-worthy infrastructure implementation.
+production-worthy infrastructure implementation.**
 
 ---
 
