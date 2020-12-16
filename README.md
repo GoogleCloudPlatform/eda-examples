@@ -7,6 +7,7 @@ Examples include:
 
 - [All on Cloud](example-all-on-cloud.md)
 - Burst to Cloud (TBD)
+- [Standalone EDA VMs](example-standalone-vm.md)
 
 **Please note that these are provided only as examples to help guide
 infrastructure planning and are not intended for use in production. They are
