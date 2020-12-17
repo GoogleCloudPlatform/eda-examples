@@ -197,7 +197,7 @@ Extract this
     tar xzvf openpiton-19-10-23-r13.tar.gz
     cd openpiton-openpiton-19-10-23-r13
 
-Next you need to set up the execution context:
+Next you need to update the environment to set up the execution context:
 
 - Set up the `PITON_ROOT` environment variable
 
