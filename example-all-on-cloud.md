@@ -52,12 +52,15 @@ required APIs using GCP's intuitive APIs.
 
 You can enable APIs by navigating to the APIs view from the dashboard view.
 
+
 ![Navigate to APIs Overview](images/APIs2.PNG)
+
 
 Search for 'Compute' and 'Filestore' and enable these APIs. After successful
 enabling of APIs, you should be able to confirm it in the Console:
 
 ![Confirm Compute Engine API is enabled](images/compute.PNG)
+
 
 ![Confirm Filestore API is enabled](images/filestore.PNG)
 
@@ -115,12 +118,16 @@ are available and commonly used for license and key-management servers.
 This process should complete in a few minutes. You may need to authorize specific API calls if a pop-up like the one below
 appears:
 
+
 ![Click authorize when this pop-up comes up](images/authorize.png)
+
 
 Once this step is successful, you can navigate to the Compute Instances view and
 should see the new resource:
 
+
 ![License resource created](images/computeres.PNG)
+
 
 ## Create NFS volumes
 
@@ -135,6 +142,8 @@ one for `/tools` (1TB).
 Note the output IP addresses reported from the `apply` as you'll need them
 in the next step to configure the slurm cluster.
 
+Once this step is successful, you can navigate to the Filestore Instances view and
+should see the new resources:
 
 ![Storage resources created](images/filestoreres.PNG)
 
@@ -212,6 +221,9 @@ to the compute resources view and you should see something like below:
 
 You can be sure that the SLURM cluster is ready to use when the
 'edafarm-compute-0-image' node (circled in black) becomes inactive. 
+
+![Compute resource view after SLURM cluster creation is complete](images/slurminactive.PNG)
+
 
 ## Run Slurm jobs
 
