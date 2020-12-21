@@ -62,6 +62,17 @@ shows that new project.
 
 All example commands below run from this Cloud Shell.
 
+
+The examples files and steps below assume that you are using the project's "default" network.  
+
+If you are using a network that you have created yourself you may need to edit the Terraform files to use your network instead of default.  
+Additionally there are a number of firewall rules that need to be opened to ensure that the Compute Instances can talk to each other and the NFS volumes.  
+They are as follows:
+-  TCP and UDP on ports 111, 2049,20048 for NFS
+-  TCP 6800-6850 and 30000-63000 for slurm
+
+
+
 ## Example source
 
 Get the source
