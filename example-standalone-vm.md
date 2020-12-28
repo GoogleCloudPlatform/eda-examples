@@ -143,15 +143,10 @@ Next, you will spin up the following test matrix of VM configurations:
 
 **Note:** If you would like to test a different set of VMs, edit `main.tf` to create your own test matrix on subsequent example runs.
 
-Change to the standalone compute example directory
+Change to the standalone compute templates directory and spin  up the VMs:
 
 ```bash
 cd ../standalone-compute
-```
-
-and spin up the test VMs:
-
-```bash
 terraform init
 terraform plan
 terraform apply
@@ -192,8 +187,6 @@ As an example, here we log into the `eda-n2-0` instance that was created by terr
 gcloud compute ssh eda-n2-0 --zone us-central1-f
 ```
 
-<!-- Note: had a IAM permission error here on setting up instance metadata. Debugging. -->
-
 At the prompt, install some dependencies for the Phoronix test suite
 
 ```bash
@@ -223,7 +216,7 @@ using an open source simulator (Icarus).
 From each VM, install some dependencies for the verification tool-chain
 
 ```bash
-yum -y install iverilog tcsh glibc.i686 elfutils-libelf-devel perl-Bit-Vector
+sudo yum -y install cpp iverilog tcsh glibc.i686 elfutils-libelf-devel perl-Bit-Vector perl-Data-Dumper
 ```
 
 Next, download an example design project from
@@ -264,6 +257,8 @@ source $PITON_ROOT/piton/piton_settings.bash
 ```bash
 sims -sim_type=icv -group=tile1_mini
 ```
+
+This creates a directory for results and execution logs which you can use to compare against other instance types and sizes in order to choose the right combinations of instance CPU, memory, and storage. You can also install a [Stackdriver monitoring agent](https://cloud.google.com/monitoring/agent/installation) to send fine-grained metrics to [Cloud Monitoring](https://cloud.google.com/monitoring). 
 
 
 ## Cleaning up
