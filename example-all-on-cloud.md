@@ -56,7 +56,9 @@ Then open a Cloud Shell associated with the project you just created
 It's important that the current Cloud Shell project is the one you just
 created.  Verify that
 
-    echo $GOOGLE_CLOUD_PROJECT
+```bash
+echo $GOOGLE_CLOUD_PROJECT
+```
 
 shows that new project.
 
@@ -66,8 +68,10 @@ All example commands below run from this Cloud Shell.
 
 Get the source
 
-    git clone https://github.com/GoogleCloudPlatform/eda-examples
-    cd eda-examples
+```bash
+git clone https://github.com/GoogleCloudPlatform/eda-examples
+cd eda-examples
+```
 
 All example commands below are relative to this top-level directory of the
 examples repo.
@@ -82,10 +86,12 @@ already installed in your GCP Cloudshell.
 
 Create an instance used to run a license manager in GCP.
 
-    cd terraform/licensing
-    terraform init
-    terraform plan
-    terraform apply
+```bash
+cd terraform/licensing
+terraform init
+terraform plan
+terraform apply
+```
 
 This creates an example instance and shows how license manager binaries and
 dependencies can be installed using `provision.sh` during instance creation.
@@ -98,10 +104,12 @@ are available and commonly used for license and key-management servers.
 Create two NFS volumes using Google Cloud Filestore.  One for `/home` (3TB) and
 one for `/tools` (3TB).
 
-    cd ../storage
-    terraform init
-    terraform plan
-    terraform apply
+```bash
+cd ../storage
+terraform init
+terraform plan
+terraform apply
+```
 
 Note the output IP addresses reported from the `apply` as you'll need them
 in the next step to configure the slurm cluster.
@@ -114,32 +122,38 @@ dynamically in GCP.
 
 Change to the slurm cluster example directory
 
-    cd ../slurm-cluster
+```bash
+cd ../slurm-cluster
+```
 
 Edit `basic.tfvars` to set some missing variables.
 Near the top, the project name (required) and the zone should match everywhere
 
-    project      = "<project>" # replace this with your GCP project name
+```terraform
+project      = "<project>" # replace this with your GCP project name
+```
 
 and then further down, fix the config for your NFS volumes by changing the
 `server_ip` entries to match the values for the volumes created above
 
-    # Optional network storage fields
-    # network_storage is mounted on all instances
-    # login_network_storage is mounted on controller and login instances
-    network_storage = [{
-      server_ip     = "10.11.12.1" # from output of storage step above
-      remote_mount  = "/home"
-      local_mount   = "/home"
-      fs_type       = "nfs"
-      mount_options = "defaults,hard,intr"
-    },{
-      server_ip     = "10.11.12.2" # from output of storage step above
-      remote_mount  = "/tools"
-      local_mount   = "/tools"
-      fs_type       = "nfs"
-      mount_options = "defaults,hard,intr"
-    }]
+```terraform
+# Optional network storage fields
+# network_storage is mounted on all instances
+# login_network_storage is mounted on controller and login instances
+network_storage = [{
+    server_ip     = "10.11.12.1" # from output of storage step above
+    remote_mount  = "/home"
+    local_mount   = "/home"
+    fs_type       = "nfs"
+    mount_options = "defaults,hard,intr"
+},{
+    server_ip     = "10.11.12.2" # from output of storage step above
+    remote_mount  = "/tools"
+    local_mount   = "/tools"
+    fs_type       = "nfs"
+    mount_options = "defaults,hard,intr"
+}]
+```
 
 Note the IP addresses for the NFS volumes come from the output of the "storage"
 steps above.
@@ -147,9 +161,11 @@ steps above.
 Next spin up the cluster.
 Still within the Slurm basic example directory above, run
 
-    terraform init
-    terraform plan -var-file basic.tfvars
-    terraform apply -var-file basic.tfvars
+```bash
+terraform init
+terraform plan -var-file basic.tfvars
+terraform apply -var-file basic.tfvars
+```
 
 and wait for the resources to be created.
 
@@ -175,81 +191,83 @@ process:
 
 Log into the Slurm login node
 
-    gcloud compute ssh <cluster_name>-login0 --zone <zone>
+```bash
+gcloud compute ssh <cluster_name>-login0 --zone <zone>
+```
 
 for example
 
-    gcloud compute ssh piton-login0 --zone us-central1-f
+```bash
+gcloud compute ssh piton-login0 --zone us-central1-f
+```
 
 which should show something like the following
 
-    External IP address was not found; defaulting to using IAP tunneling.
-    Warning: Permanently added 'compute.1234567' (ECDSA) to the list of known hosts.
+```sh
+External IP address was not found; defaulting to using IAP tunneling.
+Warning: Permanently added 'compute.1234567' (ECDSA) to the list of known hosts.
 
 
-                                     SSSSSSS
-                                    SSSSSSSSS
-                                    SSSSSSSSS
-                                    SSSSSSSSS
-                            SSSS     SSSSSSS     SSSS
-                           SSSSSS               SSSSSS
-                           SSSSSS    SSSSSSS    SSSSSS
-                            SSSS    SSSSSSSSS    SSSS
-                    SSS             SSSSSSSSS             SSS
-                   SSSSS    SSSS    SSSSSSSSS    SSSS    SSSSS
-                    SSS    SSSSSS   SSSSSSSSS   SSSSSS    SSS
-                           SSSSSS    SSSSSSS    SSSSSS
-                    SSS    SSSSSS               SSSSSS    SSS
-                   SSSSS    SSSS     SSSSSSS     SSSS    SSSSS
-              S     SSS             SSSSSSSSS             SSS     S
-             SSS            SSSS    SSSSSSSSS    SSSS            SSS
-              S     SSS    SSSSSS   SSSSSSSSS   SSSSSS    SSS     S
-                   SSSSS   SSSSSS   SSSSSSSSS   SSSSSS   SSSSS
-              S    SSSSS    SSSS     SSSSSSS     SSSS    SSSSS    S
-        S    SSS    SSS                                   SSS    SSS    S
-        S     S                                                   S     S
-                    SSS
-                    SSS
-                    SSS
-                    SSS
-     SSSSSSSSSSSS   SSS   SSSS       SSSS    SSSSSSSSS   SSSSSSSSSSSSSSSSSSSS
-    SSSSSSSSSSSSS   SSS   SSSS       SSSS   SSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSS
-    SSSS            SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-    SSSS            SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-    SSSSSSSSSSSS    SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-     SSSSSSSSSSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-             SSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-             SSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
-    SSSSSSSSSSSSS   SSS   SSSSSSSSSSSSSSS   SSSS        SSSS     SSSS     SSSS
-    SSSSSSSSSSSS    SSS    SSSSSSSSSSSSS    SSSS        SSSS     SSSS     SSSS
+                                    SSSSSSS
+                                SSSSSSSSS
+                                SSSSSSSSS
+                                SSSSSSSSS
+                        SSSS     SSSSSSS     SSSS
+                        SSSSSS               SSSSSS
+                        SSSSSS    SSSSSSS    SSSSSS
+                        SSSS    SSSSSSSSS    SSSS
+                SSS             SSSSSSSSS             SSS
+                SSSSS    SSSS    SSSSSSSSS    SSSS    SSSSS
+                SSS    SSSSSS   SSSSSSSSS   SSSSSS    SSS
+                        SSSSSS    SSSSSSS    SSSSSS
+                SSS    SSSSSS               SSSSSS    SSS
+                SSSSS    SSSS     SSSSSSS     SSSS    SSSSS
+            S     SSS             SSSSSSSSS             SSS     S
+            SSS            SSSS    SSSSSSSSS    SSSS            SSS
+            S     SSS    SSSSSS   SSSSSSSSS   SSSSSS    SSS     S
+                SSSSS   SSSSSS   SSSSSSSSS   SSSSSS   SSSSS
+            S    SSSSS    SSSS     SSSSSSS     SSSS    SSSSS    S
+    S    SSS    SSS                                   SSS    SSS    S
+    S     S                                                   S     S
+                SSS
+                SSS
+                SSS
+                SSS
+    SSSSSSSSSSSS   SSS   SSSS       SSSS    SSSSSSSSS   SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSS   SSS   SSSS       SSSS   SSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSS
+SSSS            SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+SSSS            SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+SSSSSSSSSSSS    SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+    SSSSSSSSSSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+            SSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+            SSSS   SSS   SSSS       SSSS   SSSS        SSSS     SSSS     SSSS
+SSSSSSSSSSSSS   SSS   SSSSSSSSSSSSSSS   SSSS        SSSS     SSSS     SSSS
+SSSSSSSSSSSS    SSS    SSSSSSSSSSSSS    SSSS        SSSS     SSSS     SSSS
 
 
-    [some_user_example_com@piton-login0 ~]$
-
+[some_user_example_com@piton-login0 ~]$
+```
 
 At the prompt you can run various slurm commands.
 
 For general cluster info you can use
-[`sinfo`](https://slurm.schedmd.com/sinfo.html)
+the [`sinfo`](https://slurm.schedmd.com/sinfo.html) command and see something like the following output. 
 
-    sinfo
+```bash
+[some_user_example_com@piton-login0 ~]$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+debug*       up   infinite     10  idle~ piton-compute-0-[0-9]
+```
 
-and see something like
-
-    [some_user_example_com@piton-login0 ~]$ sinfo
-    PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
-    debug*       up   infinite     10  idle~ piton-compute-0-[0-9]
-
-or [`squeue`](https://slurm.schedmd.com/squeue.html)
-
-    squeue
-
-You can run a synchronous job on 2 nodes using
+The [`squeue`](https://slurm.schedmd.com/squeue.html) command will provide information on the job queue. You can run a synchronous job on 2 nodes using
 [`srun`](https://slurm.schedmd.com/srun.html)
 
-    srun -N sleep 300
+<!-- Note test this command to get sleep processes across both nodes -->
+```bash
+srun -N 2 sleep 300
+```
 
-and you can submit batch jobs using
+You can submit batch script to the queue using
 [`sbatch`](https://slurm.schedmd.com/sbatch.html).
 
 Notice the first time you run any sort of job on Slurm it will take a little
@@ -266,22 +284,21 @@ will be running an open source functional verification regression. Further, we
 also use an open source simulator (Icarus) that has been pre-installed in the
 image.
 
-From the login node, download an example design project from
+From the login node, download and extract an example design project:
 
-    wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+```sh
+wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+tar xzvf openpiton-19-10-23-r13.tar.gz
+cd openpiton-openpiton-19-10-23-r13
+```
 
-Extract this
+You can execute the simulations across the slurm cluster using the following command:
 
-    tar xzvf openpiton-19-10-23-r13.tar.gz
-    cd openpiton-openpiton-19-10-23-r13
+```bash
+sims -sim_type=icv -group=tile1_mini -slurm -sim_q_command=sbatch
+```
 
-And you can execute this across the slurm cluster using
-
-    sims -sim_type=icv -group=tile1_mini -slurm -sim_q_command=sbatch
-
-which will kick off jobs across the cluster.
-    
-You can use `sinfo` and `squeue` to see progress.
+This will kick off jobs across the cluster. You can use `sinfo` and `squeue` to view progress.
 
 
 ## Cleaning up
@@ -319,18 +336,13 @@ can still clean up those resources using Terraform.
 
 From the `slurm-cluster` sub-directory, run
 
-    terraform destroy -var-file basic.tfvars
-
-then
-
-    cd ../storage
-    terraform destroy
-
-and
-
-    cd ../licensing
-    terraform destroy
-
+```bash
+terraform destroy -var-file basic.tfvars -auto-approve
+cd ../storage
+terraform destroy -auto-approve
+cd ../licensing
+terraform destroy -auto-approve
+```
 
 ## What's next
 
