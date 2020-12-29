@@ -44,6 +44,28 @@ for this project.
 
 You will also need to enable the Compute Engine (GCE) service for this account
 
+You need to enable Compute Engine and Filestore services as enabling these APIs
+allows you to create the required resources. It is likely that a central
+organization such as the IT organization may ultimately provide this
+functionality, but to run the example successfully, you need to enable the
+required APIs using GCP's intuitive APIs.
+
+You can enable APIs by navigating to the APIs view from the dashboard view.
+
+
+![Navigate to APIs Overview](images/APIs2.PNG)
+
+
+Search for 'Compute' and 'Filestore' and enable these APIs. After successful
+enabling of APIs, you should be able to confirm it in the Console:
+
+![Confirm Compute Engine API is enabled](images/compute.PNG)
+
+
+![Confirm Filestore API is enabled](images/filestore.PNG)
+
+Alternatively, you can also click the link below for enabling the required APIs.
+
 [Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,file.googleapis.com,cloudresourcemanager.googleapis.com)
     
 Next, make sure the project you just created is selected in the top of the
@@ -99,10 +121,24 @@ dependencies can be installed using `provision.sh` during instance creation.
 Note that [Sole-Tenant Nodes](https://cloud.google.com/sole-tenant-nodes)
 are available and commonly used for license and key-management servers.
 
+This process should complete in a few minutes. You may need to authorize specific API calls if a pop-up like the one below
+appears:
+
+
+![Click authorize when this pop-up comes up](images/authorize.png)
+
+
+Once this step is successful, you can navigate to the Compute Instances view and
+should see the new resource:
+
+
+![License resource created](images/computeres.PNG)
+
+
 ## Create NFS volumes
 
-Create two NFS volumes using Google Cloud Filestore.  One for `/home` (3TB) and
-one for `/tools` (3TB).
+Create two NFS volumes using Google Cloud Filestore.  One for `/home` (1TB) and
+one for `/tools` (1TB).
 
 ```bash
 cd ../storage
@@ -114,6 +150,10 @@ terraform apply
 Note the output IP addresses reported from the `apply` as you'll need them
 in the next step to configure the slurm cluster.
 
+Once this step is successful, you can navigate to the Filestore Instances view and
+should see the new resources:
+
+![Storage resources created](images/filestoreres.PNG)
 
 ## Create a Slurm cluster
 
@@ -127,6 +167,9 @@ cd ../slurm-cluster
 ```
 
 Edit `basic.tfvars` to set some missing variables.
+
+You need to edit 3 fields: project, 2 server ips.
+
 Near the top, the project name (required) and the zone should match everywhere
 
 ```terraform
@@ -156,7 +199,7 @@ network_storage = [{
 ```
 
 Note the IP addresses for the NFS volumes come from the output of the "storage"
-steps above.
+steps above. This step may take a few minutes as well. 
 
 Next spin up the cluster.
 Still within the Slurm basic example directory above, run
@@ -185,6 +228,17 @@ process:
   `mycluster-compute-0-image`). This part can take a few minutes. When Slurm is
   done creating the compute node template, it will terminate this instance and
   is then ready to use.
+
+The above process can take several minutes. During the process, you can navigate
+to the compute resources view and you should see something like below:
+
+
+![Compute resource view during SLURM cluster creation](images/slurmcompute.PNG)
+
+You can be sure that the SLURM cluster is ready to use when the
+'edafarm-compute-0-image' node (circled in black) becomes inactive. 
+
+![Compute resource view after SLURM cluster creation is complete](images/slurminactive.PNG)
 
 
 ## Run Slurm jobs
