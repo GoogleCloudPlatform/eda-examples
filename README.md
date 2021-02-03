@@ -5,7 +5,7 @@ for typical EDA workloads.
 
 Examples include:
 
-- [All on Cloud](example-all-on-cloud.md)
+- [All on Cloud - use this for GCP scaling verification blog](example-all-on-cloud.md)
 - [Burst to Cloud](example-burst-to-cloud.md)
 - [Standalone EDA VMs](example-standalone-vm.md)
 

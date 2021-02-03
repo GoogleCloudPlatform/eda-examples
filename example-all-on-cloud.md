@@ -44,6 +44,28 @@ for this project.
 
 You will also need to enable the Compute Engine (GCE) service for this account
 
+You need to enable Compute Engine and Filestore services as enabling these APIs
+allows you to create the required resources. It is likely that a central
+organization such as the IT organization may ultimately provide this
+functionality, but to run the example successfully, you need to enable the
+required APIs using GCP's intuitive APIs.
+
+You can enable APIs by navigating to the APIs view from the dashboard view.
+
+
+![Navigate to APIs Overview](images/APIs2.PNG)
+
+
+Search for 'Compute' and 'Filestore' and enable these APIs. After successful
+enabling of APIs, you should be able to confirm it in the Console:
+
+![Confirm Compute Engine API is enabled](images/compute.PNG)
+
+
+![Confirm Filestore API is enabled](images/filestore.PNG)
+
+Alternatively, you can also click the link below for enabling the required APIs.
+
 [Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,file.googleapis.com,cloudresourcemanager.googleapis.com)
     
 Next, make sure the project you just created is selected in the top of the
@@ -61,6 +83,17 @@ created.  Verify that
 shows that new project.
 
 All example commands below run from this Cloud Shell.
+
+
+The examples files and steps below assume that you are using the project's "default" network.  
+
+If you are using a network that you have created yourself you may need to edit the Terraform files to use your network instead of default.  
+Additionally there are a number of firewall rules that need to be opened to ensure that the Compute Instances can talk to each other and the NFS volumes.  
+They are as follows:
+-  TCP and UDP on ports 111, 2049,20048 for NFS
+-  TCP 6800-6850 and 30000-63000 for slurm
+
+
 
 ## Example source
 
@@ -93,10 +126,24 @@ dependencies can be installed using `provision.sh` during instance creation.
 Note that [Sole-Tenant Nodes](https://cloud.google.com/sole-tenant-nodes)
 are available and commonly used for license and key-management servers.
 
+This process should complete in a few minutes. You may need to authorize specific API calls if a pop-up like the one below
+appears:
+
+
+![Click authorize when this pop-up comes up](images/authorize.png)
+
+
+Once this step is successful, you can navigate to the Compute Instances view and
+should see the new resource:
+
+
+![License resource created](images/computeres.PNG)
+
+
 ## Create NFS volumes
 
-Create two NFS volumes using Google Cloud Filestore.  One for `/home` (3TB) and
-one for `/tools` (3TB).
+Create two NFS volumes using Google Cloud Filestore.  One for `/home` (1TB) and
+one for `/tools` (1TB).
 
     cd ../storage
     terraform init
@@ -106,6 +153,10 @@ one for `/tools` (3TB).
 Note the output IP addresses reported from the `apply` as you'll need them
 in the next step to configure the slurm cluster.
 
+Once this step is successful, you can navigate to the Filestore Instances view and
+should see the new resources:
+
+![Storage resources created](images/filestoreres.PNG)
 
 ## Create a Slurm cluster
 
@@ -117,6 +168,9 @@ Change to the slurm cluster example directory
     cd ../slurm-cluster
 
 Edit `basic.tfvars` to set some missing variables.
+
+You need to edit 3 fields: project, 2 server ips.
+
 Near the top, the project name (required) and the zone should match everywhere
 
     project      = "<project>" # replace this with your GCP project name
@@ -142,7 +196,7 @@ and then further down, fix the config for your NFS volumes by changing the
     }]
 
 Note the IP addresses for the NFS volumes come from the output of the "storage"
-steps above.
+steps above. This step may take a few minutes as well. 
 
 Next spin up the cluster.
 Still within the Slurm basic example directory above, run
@@ -170,6 +224,17 @@ process:
   done creating the compute node template, it will terminate this instance and
   is then ready to use.
 
+The above process can take several minutes. During the process, you can navigate
+to the compute resources view and you should see something like below:
+
+
+![Compute resource view during SLURM cluster creation](images/slurmcompute.PNG)
+
+You can be sure that the SLURM cluster is ready to use when the
+'edafarm-compute-0-image' node (circled in black) becomes inactive. 
+
+![Compute resource view after SLURM cluster creation is complete](images/slurminactive.PNG)
+
 
 ## Run Slurm jobs
 
@@ -179,7 +244,7 @@ Log into the Slurm login node
 
 for example
 
-    gcloud compute ssh piton-login0 --zone us-central1-f
+    gcloud compute ssh edafarm-login0 --zone us-central1-f
 
 which should show something like the following
 
@@ -224,7 +289,7 @@ which should show something like the following
     SSSSSSSSSSSS    SSS    SSSSSSSSSSSSS    SSSS        SSSS     SSSS     SSSS
 
 
-    [some_user_example_com@piton-login0 ~]$
+    [some_user_example_com@edafarm-login0 ~]$
 
 
 At the prompt you can run various slurm commands.
@@ -236,9 +301,9 @@ For general cluster info you can use
 
 and see something like
 
-    [some_user_example_com@piton-login0 ~]$ sinfo
+    [some_user_example_com@edafarm-login0 ~]$ sinfo
     PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
-    debug*       up   infinite     10  idle~ piton-compute-0-[0-9]
+    debug*       up   infinite     10  idle~ edafarm-compute-0-[0-9]
 
 or [`squeue`](https://slurm.schedmd.com/squeue.html)
 
@@ -268,7 +333,7 @@ image.
 
 From the login node, download an example design project from
 
-    wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+    wget https://github.com/PrincetonUniversity/openiton/archive/openpiton-19-10-23-r13.tar.gz
 
 Extract this
 
