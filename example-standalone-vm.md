@@ -1,33 +1,30 @@
-# Example - Standalone EDA VMs
+# Using Standalone VMs to optimize performance and cost for EDA
 
-Lots of folks want to test various "shapes" of VM to determine the best number
-of cores, memory, and storage for particular EDA jobs. Here are some example
-template snippets used to spin up Google Cloud resources to run EDA workloads
-on various sizes and shapes of standalone VMs. They provide quick and easy ways
-to spin up the following test matrix of VMs for your own experiments. 
+Google cloud provides a broad set of [machine types](https://cloud.google.com/compute/docs/machine-types#machine_type_comparison), [GPUs](https://cloud.google.com/compute/docs/gpus), and [storage options](https://cloud.google.com/compute/docs/disks). 
+Lots of folks want to test various "shapes" of compute and storage to determine the best number
+of cores, memory, and storage type and amount for a particular EDA job. 
 
-| Name | `machine-type` | Chipset | vCpus | Memory (GB) | Available Storage |
+In this tutorial, we provide Terraform templates to help you quickly and easily stand up the following types of resources to test different sizes and types of instances for your own experiments. 
+
+| Template Name | `machine-type` | Chipset | vCpus | Memory (GB) | Available Storage |
 | --- | --- | --- | --- | --- | --- |
 | eda-n2-0 | `n2-standard-2` | Cascade Lake | 2 | 8 | PersistentDisk, LocalSSD, NFS |
 | eda-n2d-0 | `n2d-highmem-2` | EPYC Rome | 2 | 16 | PersistentDisk, LocalSSD, NFS |
 | eda-c2-0 | `c2-standard-4` | Cascade Lake | 4 | 16 | PersistentDisk, LocalSSD, NFS |
 | ... | ... | ... | ... | ... | ... |
 
-You can adjust this to your own interests by adding different sizes and classes of
-machine types `m2`, `e2`, etc. using the
-[GCP machine type comparison](https://cloud.google.com/compute/docs/machine-types#machine_type_comparison)
-for reference. You will need to check for availability in the region you're
-intending to run in as well as potentially ask for more quota for certain
-machine types.
 
-The current scripts provided start the specified machines and mount the
+The current templates provided start the specified machine types and mount the
 various storage volumes that are created.
 
-Machine types should be finalized after validation in production or
+You can adjust these templates to your own interests by adding different sizes and classes of
+machine types `m2`, `e2`, etc. using the
+[GCP machine type comparison](https://cloud.google.com/compute/docs/machine-types#machine_type_comparison)
+for reference. Machine types should be finalized after validation in production or
 pre-production environment. Machine recommendations in this document are
 provided to guide infrastructure planning. They are deliberately simplified for
 clarity and lack significant details required for production-worthy
-infrastructure implementation.
+infrastructure implementation. _NOTE:_ You will need to check for machine type availability in the region you're intending to run EDA workloads in, as well as potentially ask for more quota for certain machine types before production runs. 
 
 
 ## Costs
@@ -72,7 +69,9 @@ Then open a Cloud Shell associated with the project you just created
 It's important that the current Cloud Shell project is the one you just
 created.  Verify that
 
-    echo $GOOGLE_CLOUD_PROJECT
+```bash
+echo $GOOGLE_CLOUD_PROJECT
+```
 
 shows that new project.
 
@@ -83,8 +82,10 @@ All example commands below run from this Cloud Shell.
 
 Get the source
 
-    git clone https://github.com/GoogleCloudPlatform/eda-examples
-    cd eda-examples
+```bash
+git clone https://github.com/GoogleCloudPlatform/eda-examples
+cd eda-examples
+```
 
 All example commands below are relative to this top-level directory of the
 examples repo.
@@ -92,40 +93,47 @@ examples repo.
 
 ## Tools
 
-We use [Terraform](terraform.io) for these examples and the latest version is
-already installed in your GCP Cloudshell.
-
+We use [Terraform](terraform.io) for these examples which is
+already installed in your GCP Cloudshell. The version of Terraform that has been tested with these templates is `v0.12.24`. 
 
 ## Create a license server
 
 Create an instance used to run a license manager in GCP.
 
-    cd terraform/licensing
-    terraform init
-    terraform plan
-    terraform apply
-
-This creates an example instance and shows how license manager binaries and
+```bash
+cd terraform/licensing
+terraform init
+terraform plan
+```
+The output from above will show the resources that Terraform will create. This shows creation of an example instance and shows how license manager binaries and
 dependencies can be installed using `provision.sh` during instance creation.
 
+Once you review the plan, execute the following to apply the plan and launch the license server VM.
+
+```bash
+terraform apply
+```
 
 ## Create NFS volumes
 
 Create two NFS volumes using Google Cloud Filestore.  One for `/home` (3TB) and
 one for `/tools` (3TB).
 
-    cd ../storage
-    terraform init
-    terraform plan
-    terraform apply
+```bash
+cd ../storage
+terraform init
+terraform plan
+terraform apply
+```
 
-and wait for the resources to be created.  It can take a few minutes for the
-volume creation to complete.
+**Note:** if you get an error that the Google Cloud Filestore API has not been used, navigate to the [Cloud Filestore console page](https://console.cloud.google.com/filestore) and enable the API. Once the API has been enabled, run the `terraform apply` command once again. 
+
+**Note:** It can take a few minutes for the volume creation to complete. Wait for the resources to be created before taking the next steps.  
 
 
 ## Create a test matrix of standalone VMs
 
-Next, spin up the following test matrix of VM configurations
+Next, you will spin up the following test matrix of VM configurations:
 
 | Name | `machine-type` | Chipset | vCpus | Memory (GB) | Available Storage |
 | --- | --- | --- | --- | --- | --- |
@@ -133,19 +141,31 @@ Next, spin up the following test matrix of VM configurations
 | eda-n2d-0 | `n2d-highmem-2` | EPYC Rome | 2 | 16 | PersistentDisk, LocalSSD, NFS |
 | eda-c2-0 | `c2-standard-4` | Cascade Lake | 4 | 16 | PersistentDisk, LocalSSD, NFS |
 
-Change to the standalone compute example directory
+**Note:** If you would like to test a different set of VMs, edit `main.tf` to create your own test matrix on subsequent example runs.
 
-    cd ../standalone-compute
+Change to the standalone compute templates directory and spin  up the VMs:
 
-and spin up the test VMs:
+```bash
+cd ../standalone-compute
+terraform init
+terraform plan
+terraform apply
+```
 
-    terraform init
-    terraform plan
-    terraform apply
+Wait for the resources to be created. You can check on what was created using the `gcloud` CLI 
+```bash
+gcloud compute instances list
+```
 
-and wait for the resources to be created.
+which should produce output like the following
 
-Edit `main.tf` to create your own test matrix on subsequent example runs.
+```
+NAME            ZONE           MACHINE_TYPE    PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+eda-c2-0        us-central1-f  c2-standard-4                10.128.0.29  34.67.237.187   RUNNING
+eda-n2-0        us-central1-f  n2-standard-2                10.128.0.27  35.224.171.205  RUNNING
+eda-n2d-0       us-central1-f  n2d-highmem-2                10.128.0.28  35.232.69.56    RUNNING
+license-server  us-central1-f  n2d-standard-2               10.128.0.26  35.184.28.204   RUNNING
+```
 
 
 ## Log in and run a common test suite
@@ -155,29 +175,38 @@ we'll use the popular [Phoronix Test
 Suite](https://www.phoronix-test-suite.com/) as an example standalone node test
 platform.
 
-For each VM, Log into that node
+For each VM, log into that node using the `gcloud` CLI within the console, using the format of 
 
-    gcloud compute ssh <vm_name> --zone <zone>
+```bash
+gcloud compute ssh $VM_NAME --zone $VM_ZONE
+```
 
-for example
+As an example, here we log into the `eda-n2-0` instance that was created by terraform in the previous step. 
 
-    gcloud compute ssh eda-n2-0 --zone us-central1-f
+```bash
+gcloud compute ssh eda-n2-0 --zone us-central1-f
+```
 
 At the prompt, install some dependencies for the Phoronix test suite
 
-    sudo yum install -y wget php-cli php-xml bzip2
+```bash
+sudo yum install -y wget php-cli php-xml bzip2
+```
 
 then download and install the Phoronix Test Suite
 
-    wget https://phoronix-test-suite.com/releases/phoronix-test-suite-8.4.1.tar.gz
-    tar xvfz phoronix-test-suite-8.4.1.tar.gz
-    cd phoronix-test-suite
-    sudo ./install-sh
+```bash
+wget https://phoronix-test-suite.com/releases/phoronix-test-suite-8.4.1.tar.gz
+tar xvfz phoronix-test-suite-8.4.1.tar.gz
+cd phoronix-test-suite
+sudo ./install-sh
+```
 
-You can then run
+Once the installation completes, you can see the available tests using the following command
 
-    phoronix-test-suite list-available-tests
-
+```bash
+phoronix-test-suite list-available-tests
+```
 
 ## Run an EDA job
 
@@ -186,37 +215,51 @@ using an open source simulator (Icarus).
 
 From each VM, install some dependencies for the verification tool-chain
 
-    yum -y install iverilog tcsh glibc.i686 elfutils-libelf-devel perl-Bit-Vector
+```bash
+sudo yum -y install cpp iverilog tcsh glibc.i686 elfutils-libelf-devel perl-Bit-Vector perl-Data-Dumper
+```
 
 Next, download an example design project from
 
-    wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+```bash
+wget https://github.com/PrincetonUniversity/openpiton/archive/openpiton-19-10-23-r13.tar.gz
+```
 
 Extract this
 
-    tar xzvf openpiton-19-10-23-r13.tar.gz
-    cd openpiton-openpiton-19-10-23-r13
+```bash
+tar xzvf openpiton-19-10-23-r13.tar.gz
+cd openpiton-openpiton-19-10-23-r13
+```
 
 Next you need to update the environment to set up the execution context:
 
 - Set up the `PITON_ROOT` environment variable
 
-    export PITON_ROOT=`pwd`
+```bash
+export PITON_ROOT=`pwd`
+```
 
 - Set up simulator home
 
-    export ICARUS_HOME=/usr
+```bash
+export ICARUS_HOME=/usr
+```
 
 - Source required settings
 
-    source $PITON_ROOT/piton/piton_settings.bash
+```bash
+source $PITON_ROOT/piton/piton_settings.bash
+```
 
-- And then you can
+- Run the simulations on the current node using the following command
 
-    sims -sim_type=icv -group=tile1_mini
+```bash
+sims -sim_type=icv -group=tile1_mini
+```
 
-  which will run the sims on the current node.
-    
+This creates a directory for results and execution logs which you can use to compare against other instance types and sizes in order to choose the right combinations of instance CPU, memory, and storage. You can also install a [Stackdriver monitoring agent](https://cloud.google.com/monitoring/agent/installation) to send fine-grained metrics to [Cloud Monitoring](https://cloud.google.com/monitoring). 
+
 
 ## Cleaning up
 
@@ -229,9 +272,11 @@ The easiest way to clean up all of the resources used in this tutorial is
 to delete the project that you initially created for the tutorial.
 
 Caution: Deleting a project has the following effects:
+
 - Everything in the project is deleted. If you used an existing project for
   this tutorial, when you delete it, you also delete any other work you've done
   in the project.
+
 - Custom project IDs are lost. When you created this project, you might have
   created a custom project ID that you want to use in the future. To preserve
   the URLs that use the project ID, such as an appspot.com URL, delete selected
@@ -251,20 +296,16 @@ Caution: Deleting a project has the following effects:
 Alternatively, if you added the tutorial resources to an _existing_ project, you
 can still clean up those resources using Terraform.
 
-From the `standalone-compute` sub-directory, run
+From the `eda-examples` git project root directory, run the following in this order:
 
-    terraform destroy
-
-then
-
-    cd ../storage
-    terraform destroy
-
-and
-
-    cd ../licensing
-    terraform destroy
-
+```bash
+cd terraform/standalone-compute
+terraform destroy -auto-approve
+cd ../storage
+terraform destroy -auto-approve
+cd ../licensing
+terraform destroy -auto-approve
+```
 
 ## What's next
 
