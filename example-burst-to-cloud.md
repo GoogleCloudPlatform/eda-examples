@@ -70,6 +70,23 @@ We use [Terraform](terraform.io) for these examples and the latest version is
 already installed in your GCP Cloudshell.
 
 
+## Setup networking for this example
+
+Network configuration can vary quite a bit across hpc environments.  This
+"burst to cloud" example scenario requires two separate networks where DNS
+names resolve and all traffic is routed.
+
+To create the example networking infrastructure change to
+
+    cd onprem-burst-networking
+
+and then
+
+    terraform init
+    terraform plan
+    terraform apply
+
+
 ## Create a mock "on-premises" Slurm cluster in GCP
 
 Create an example slurm cluster with a single `debug` partition that scales
