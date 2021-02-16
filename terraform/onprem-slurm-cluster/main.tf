@@ -22,21 +22,21 @@ provider "google" {
   region  = local.region
 }
 
-module "slurm_cluster_network" {
-  source = "../../third_party/slurm-gcp/tf/modules/network"
+#module "slurm_cluster_network" {
+  #source = "../../third_party/slurm-gcp/tf/modules/network"
 
-  cluster_name                  = var.cluster_name
-  disable_login_public_ips      = var.disable_login_public_ips
-  disable_controller_public_ips = var.disable_controller_public_ips
-  disable_compute_public_ips    = var.disable_compute_public_ips
-  network_name                  = var.network_name
-  partitions                    = var.partitions
-  shared_vpc_host_project       = var.shared_vpc_host_project
-  subnetwork_name               = var.subnetwork_name
+  #cluster_name                  = var.cluster_name
+  #disable_login_public_ips      = var.disable_login_public_ips
+  #disable_controller_public_ips = var.disable_controller_public_ips
+  #disable_compute_public_ips    = var.disable_compute_public_ips
+  #network_name                  = var.network_name
+  #partitions                    = var.partitions
+  #shared_vpc_host_project       = var.shared_vpc_host_project
+  #subnetwork_name               = var.subnetwork_name
 
-  project = var.project
-  region  = local.region
-}
+  #project = var.project
+  #region  = local.region
+#}
 
 module "slurm_cluster_controller" {
   source = "../../third_party/slurm-gcp/tf/modules/controller"
@@ -65,7 +65,7 @@ module "slurm_cluster_controller" {
   slurm_version                 = var.slurm_version
   scopes                        = var.controller_scopes
   service_account               = var.controller_service_account
-  subnet_depend                 = module.slurm_cluster_network.subnet_depend
+  #subnet_depend                 = module.slurm_cluster_network.subnet_depend
   subnetwork_name               = var.subnetwork_name
   suspend_time                  = var.suspend_time
   zone                          = var.zone
@@ -91,7 +91,7 @@ module "slurm_cluster_login" {
   network_storage           = var.network_storage
   ompi_version              = var.ompi_version
   shared_vpc_host_project   = var.shared_vpc_host_project
-  subnet_depend             = module.slurm_cluster_network.subnet_depend
+  #subnet_depend             = module.slurm_cluster_network.subnet_depend
   subnetwork_name           = var.subnetwork_name
   zone                      = var.zone
 }
@@ -113,7 +113,7 @@ module "slurm_cluster_compute" {
   scopes                     = var.compute_node_scopes
   service_account            = var.compute_node_service_account
   shared_vpc_host_project    = var.shared_vpc_host_project
-  subnet_depend              = module.slurm_cluster_network.subnet_depend
+  #subnet_depend              = module.slurm_cluster_network.subnet_depend
   subnetwork_name            = var.subnetwork_name
   zone                       = var.zone
 }
