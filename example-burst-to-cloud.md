@@ -72,13 +72,29 @@ already installed in your GCP Cloudshell.
 
 ## Setup networking for this example
 
-Network configuration can vary quite a bit across hpc environments.  This
-"burst to cloud" example scenario requires two separate networks where DNS
-names resolve and all traffic is routed.
+Network configuration for on-premises HPC environments can vary quite a bit
+from organization to organization and there will be many options to consider
+when trying to wire up on-premises and Cloud environments.  Will you have a
+dedicated or partner-provided Cloud Interconnect?  Will you use a shared VPC or
+will you use a VPC gateway to connect the networks?  How will you handle
+authentication?  How will you handle DNS names?
 
-To create the example networking infrastructure change to
+This tutorial covers the basics of bursting jobs up to the cloud so we'll start
+with the simplest networking possible to show submitting jobs across two
+federated Slurm clusters.
 
-    cd onprem-burst-networking
+We'll use two separate networks `onprem` and `burst` that can:
+
+- talk to each other (all icmp, tcp, and udp traffic is routed between them)
+- use machine names instead of IP addresses (DNS names resolve across both nets)
+
+The `onprem` network lives in the cloud but is meant to represent an
+"on-premises" network segment that can communicate with cloud resources.
+
+To create the networking infrastructure used in this example, first change to
+the right directory
+
+    cd terraform/onprem-burst-networking
 
 and then
 
@@ -86,8 +102,16 @@ and then
     terraform plan
     terraform apply
 
+You can check that the network resources were created using commands such as
 
-## Create a mock "on-premises" Slurm cluster in GCP
+    gcloud compute networks subnets list
+
+and
+
+    gcloud compute firewall-rules list
+
+
+## Create an "on-premises" Slurm cluster in GCP
 
 Create an example slurm cluster with a single `debug` partition that scales
 dynamically in GCP.
