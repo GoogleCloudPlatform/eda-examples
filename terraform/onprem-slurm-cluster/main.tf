@@ -22,6 +22,10 @@ provider "google" {
   region  = local.region
 }
 
+resource "random_password" "munge_key" {
+  length = 1024
+}
+
 #module "slurm_cluster_network" {
   #source = "../../third_party/slurm-gcp/tf/modules/network"
 
@@ -52,7 +56,8 @@ module "slurm_cluster_controller" {
   login_network_storage         = var.login_network_storage
   login_node_count              = var.login_node_count
   machine_type                  = var.controller_machine_type
-  munge_key                     = var.munge_key
+  #munge_key                     = var.munge_key
+  munge_key                     = random_password.munge_key.result
   network_storage               = var.network_storage
   ompi_version                  = var.ompi_version
   partitions                    = var.partitions
@@ -87,7 +92,8 @@ module "slurm_cluster_login" {
   region                    = local.region
   scopes                    = var.login_node_scopes
   service_account           = var.login_node_service_account
-  munge_key                 = var.munge_key
+  #munge_key                 = var.munge_key
+  munge_key                 = random_password.munge_key.result
   network_storage           = var.network_storage
   ompi_version              = var.ompi_version
   shared_vpc_host_project   = var.shared_vpc_host_project

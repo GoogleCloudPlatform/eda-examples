@@ -263,7 +263,7 @@ WantedBy=multi-user.target
 
         util.run(f"chown -R munge: {MUNGE_DIR} /var/log/munge/")
 
-        (MUNGE_DIR/'munge_key').chmod(0o400)
+        (MUNGE_DIR/'munge.key').chmod(0o400)
         MUNGE_DIR.chmod(0o700)
         Path('var/log/munge/').chmod(0o700)
     else:
