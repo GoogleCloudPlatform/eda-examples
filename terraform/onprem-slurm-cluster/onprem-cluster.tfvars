@@ -1,14 +1,14 @@
 cluster_name = "onprem"
-project      = "<project>"
+project      ="hybrid-testing-project-eda" 
 zone         = "us-central1-f"
 
 #network_name            = "default"
 subnetwork_name         = "onprem"
 # shared_vpc_host_project = "<vpc host project>"
 
-# disable_controller_public_ips = true
-# disable_login_public_ips      = true
-# disable_compute_public_ips    = true
+disable_controller_public_ips = false
+disable_login_public_ips      = false
+disable_compute_public_ips    = false
 
 # ompi_version  = null # e.g. v3.1.x
 # slurm_version = "19.05-latest"
@@ -82,7 +82,7 @@ subnetwork_name         = "onprem"
 
 partitions = [
   { name                 = "debug"
-    machine_type         = "n1-standard-2"
+    machine_type         = "n1-standard-16"
     static_node_count    = 0
     max_node_count       = 10
     zone                 = "us-central1-f"
