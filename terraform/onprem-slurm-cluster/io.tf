@@ -265,9 +265,14 @@ variable "zone" {
   type = string
 }
 
-#output "login_network_ips" {
-  #value = "${module.slurm_cluster_login.instance_network_ips}"
-#}
+output "munge_key" {
+    value = random_password.munge_key.result
+}
+
+output "controller_ip_addresses" {
+  value = module.slurm_cluster_controller.instance_network_ips
+}
+
 output "login_message" {
   value = <<-EOS
     Slurm is currently being installed/configured in the background
