@@ -61,7 +61,6 @@ module "slurm_cluster_controller" {
   login_network_storage         = var.login_network_storage
   login_node_count              = var.login_node_count
   machine_type                  = var.controller_machine_type
-  #munge_key                     = var.munge_key
   munge_key                     = data.terraform_remote_state.onprem_slurm_cluster.outputs.munge_key
   network_storage               = var.network_storage
   ompi_version                  = var.ompi_version
@@ -97,7 +96,6 @@ module "slurm_cluster_login" {
   region                    = local.region
   scopes                    = var.login_node_scopes
   service_account           = var.login_node_service_account
-  #munge_key                 = var.munge_key
   munge_key                 = data.terraform_remote_state.onprem_slurm_cluster.outputs.munge_key
   network_storage           = var.network_storage
   ompi_version              = var.ompi_version
@@ -123,6 +121,7 @@ module "slurm_cluster_compute" {
   region                     = local.region
   scopes                     = var.compute_node_scopes
   service_account            = var.compute_node_service_account
+  munge_key                 = data.terraform_remote_state.onprem_slurm_cluster.outputs.munge_key
   shared_vpc_host_project    = var.shared_vpc_host_project
   #subnet_depend              = module.slurm_cluster_network.subnet_depend
   subnetwork_name            = var.subnetwork_name
