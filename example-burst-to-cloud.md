@@ -179,6 +179,26 @@ Note again that creating a Slurm cluster using these example templates involves 
 process (described above) and will take ~5mins.
 
 
+## Configure Munge for both clusters
+
+Log into one of the Slurm login nodes for the "onprem" cluster:
+
+    gcloud compute ssh onprem-login0 --zone <zone>
+
+At the prompt
+
+    sudo cp /etc/munge/munge.key /tmp/onprem.munge.key
+    exit
+
+On your cloud instance
+
+
+
+
+
+## Create a Federation of two Slurm clusters
+
+
 ## Run Slurm jobs
 
 Log into one of the Slurm login nodes for the "onprem" cluster:
