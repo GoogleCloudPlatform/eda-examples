@@ -47,7 +47,7 @@ variable "compute_image_labels" {
 
 variable "compute_image_machine_type" {
   type    = string
-  default = "n1-standard-2"
+  default = "c2-standard-30"
 }
 
 variable "compute_node_scopes" {
@@ -68,7 +68,7 @@ variable "compute_node_service_account" {
 variable "controller_machine_type" {
   description = "Machine type to use for the controller instance"
   type        = string
-  default     = "n1-standard-2"
+  default     = "c2-standard-30"
 }
 
 variable "controller_disk_type" {
@@ -153,7 +153,7 @@ variable "login_labels" {
 variable "login_machine_type" {
   description = "Machine type to use for login node instances."
   type        = string
-  default     = "n1-standard-2"
+  default     = "c2-standard-30"
 }
 
 variable "login_network_storage" {
