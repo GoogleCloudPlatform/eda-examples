@@ -27,6 +27,7 @@ subnetwork_name         = "default"
 
 # ompi_version  = null # e.g. v3.1.x
 # slurm_version = "19.05-latest"
+slurm_version = "b:slurm-19-05-8-1"
 # suspend_time  = 300
 
 # controller_machine_type = "n1-standard-2"

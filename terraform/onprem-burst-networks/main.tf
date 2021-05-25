@@ -13,32 +13,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+resource "google_compute_network" "tutorial" {
+  name          = "tutorial"
+  auto_create_subnetworks = false
+}
+
 resource "google_compute_subnetwork" "onprem" {
   name          = "onprem"
   ip_cidr_range = "10.2.1.0/24"
   region        = var.region
-  network       = "default"
+  network       = google_compute_network.tutorial.id
 }
 
 resource "google_compute_subnetwork" "burst" {
   name          = "burst"
   ip_cidr_range = "10.2.2.0/24"
   region        = var.region
-  network       = "default"
+  network       = google_compute_network.tutorial.id
 }
 
-resource "google_compute_router" "default" {
-  name    = "default"
-  network = "default"
+resource "google_compute_router" "tutorial" {
+  name    = "tutorial"
+  network       = google_compute_network.tutorial.id
   region  = var.region
 }
 
-resource "google_compute_router_nat" "default" {
-  name                               = "default"
-  router                             = google_compute_router.default.name
+resource "google_compute_router_nat" "tutorial" {
+  name                               = "tutorial"
+  router                             = google_compute_router.tutorial.name
   region  = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+
+  depends_on       = [ google_compute_network.tutorial ]
 
   log_config {
     enable = true
@@ -48,7 +55,7 @@ resource "google_compute_router_nat" "default" {
 
 resource "google_compute_firewall" "default-iap-access" {
   name    = "default-iap-access"
-  network = "default"
+  network       = google_compute_network.tutorial.id
 
   allow {
     protocol = "tcp"
@@ -60,7 +67,7 @@ resource "google_compute_firewall" "default-iap-access" {
 
 resource "google_compute_firewall" "onprem-allow-internal" {
   name    = "onprem-allow-internal"
-  network = "default"
+  network       = google_compute_network.tutorial.id
   description = "Allow internal traffic on the onprem network"
 
   allow {
@@ -76,7 +83,7 @@ resource "google_compute_firewall" "onprem-allow-internal" {
 }
 resource "google_compute_firewall" "burst-allow-internal" {
   name    = "burst-allow-internal"
-  network = "default"
+  network       = google_compute_network.tutorial.id
   description = "Allow internal traffic on the burst network"
 
   allow {
