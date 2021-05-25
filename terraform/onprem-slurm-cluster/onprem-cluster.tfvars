@@ -2,7 +2,7 @@ cluster_name = "onprem"
 project      = "<project>"
 zone         = "us-central1-f"
 
-#network_name            = "default"
+network_name            = "tutorial"
 subnetwork_name         = "onprem"
 # shared_vpc_host_project = "<vpc host project>"
 
