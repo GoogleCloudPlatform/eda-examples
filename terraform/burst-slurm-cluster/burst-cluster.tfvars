@@ -34,6 +34,7 @@ subnetwork_name         = "burst"
 # controller_secondary_disk_type = "pd-ssd"
 
 # login_machine_type = "n1-standard-2"
+login_machine_type = "c2-standard-30"
 # login_disk_type    = "pd-standard"
 # login_disk_size_gb = 20
 # login_labels = {
