@@ -2,7 +2,7 @@ cluster_name = "onprem"
 project      = "<project>"
 zone         = "us-central1-f"
 
-#network_name            = "default"
+network_name            = "tutorial"
 subnetwork_name         = "onprem"
 # shared_vpc_host_project = "<vpc host project>"
 
@@ -12,6 +12,8 @@ subnetwork_name         = "onprem"
 
 # ompi_version  = null # e.g. v3.1.x
 # slurm_version = "19.05-latest"
+#slurm_version = "20.02-latest"
+slurm_version = "b:slurm-19-05-8-1"
 # suspend_time  = 300
 
 # controller_machine_type = "n1-standard-2"

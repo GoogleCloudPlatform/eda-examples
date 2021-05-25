@@ -2,7 +2,7 @@ cluster_name = "burst"
 project      = "<project>"
 zone         = "us-central1-f"
 
-#network_name            = "default"
+network_name            = "tutorial"
 subnetwork_name         = "burst"
 # shared_vpc_host_project = "<vpc host project>"
 
@@ -12,6 +12,7 @@ subnetwork_name         = "burst"
 
 # ompi_version  = null # e.g. v3.1.x
 # slurm_version = "19.05-latest"
+slurm_version = "b:slurm-19-05-8-1"
 # suspend_time  = 300
 
 # controller_machine_type = "n1-standard-2"
@@ -34,6 +35,7 @@ subnetwork_name         = "burst"
 # controller_secondary_disk_type = "pd-ssd"
 
 # login_machine_type = "n1-standard-2"
+login_machine_type = "c2-standard-30"
 # login_disk_type    = "pd-standard"
 # login_disk_size_gb = 20
 # login_labels = {
