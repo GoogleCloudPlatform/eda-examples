@@ -5,8 +5,10 @@ for typical EDA workloads.
 
 Examples include:
 
-- [All on Cloud - use this for GCP scaling verification blog](example-all-on-cloud.md)
-- [Burst to Cloud](example-burst-to-cloud.md)
+- [All on Cloud](example-all-on-cloud.md) (use this for the
+  [scaling verification blog post](https://cloud.google.com/blog/products/compute/scale-up-your-eda-flows-on-google-cloud))
+- [Burst to Cloud](example-burst-to-cloud.md) (use this for the
+  [hybrid silicon workflows blog post](https://cloud.google.com/blog/products/compute/faster-chip-design-with-hybrid-silicon-workflows))
 - [Standalone EDA VMs](example-standalone-vm.md)
 
 **Please note that these are provided only as examples to help guide

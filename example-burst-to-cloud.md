@@ -58,7 +58,7 @@ All example commands below run from this Cloud Shell.
 Get the source
 
     git clone <this_repo_url>
-    cd gcp-eda-examples
+    cd eda-examples
 
 All example commands below are relative to this top-level directory of the
 examples repo.
@@ -93,7 +93,7 @@ on-premises network segment that can communicate with cloud resources.
 To create the networking infrastructure used in this example, first change to
 the right directory
 
-    cd terraform/onprem-burst-networking
+    cd terraform/onprem-burst-networks
 
 and then
 
