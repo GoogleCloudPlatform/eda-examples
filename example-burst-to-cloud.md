@@ -156,6 +156,17 @@ process:
 Create another example slurm cluster with a single `debug` partition that scales
 dynamically in GCP.
 
+Please note that in order to reproduce the analysis described in the
+accompanying
+[blog post](https://cloud.google.com/blog/products/compute/faster-chip-design-with-hybrid-silicon-workflows)),
+this cluster is configured to use large compute-optimized machine types for the
+"login" node as well as the "compute" nodes.
+
+**The following cluster will not work with the Google Cloud Free Tier** and you
+will need sufficient quota for the `C2_CPU` cores that are currently
+configured. Alternatively, please adjust the machine types in the burst slurm
+config file below.
+
 Change to the slurm cluster example directory
 
     cd burst-slurm-cluster
