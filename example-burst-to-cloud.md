@@ -296,6 +296,26 @@ Exit from the `onprem-login0` node when you're done running jobs in the
 "onprem" cluster.
 
 
+## Running test regressions
+
+Once the clusters are set up, the regressions can be run on the clusters to
+compare performance. Steps involved in running the 2 regressions (`tile1_mini`
+and `tile2_mini`)
+
+1. set the `PITON_ROOT` environment variable; export `PITON_ROOT=<installation directory>`
+2. set the `ICARUS_HOME` environment variable; export `ICARUS_HOME=/usr`
+3. Source the settings file; `source $PITON_ROOT/piton/piton_settings.bash`
+4. Run the `tile1_mini` regression; `sims -sim_type=icv -group=tile1_mini -slurm -sim_q_command=sbatch`
+
+Wait for the regression to finish before running step 5 below.
+
+5. Run the `tile2_mini` regression; `sims -sim_type=icv -group=tile2_mini -slurm -sim_q_command=sbatch`
+
+Regression run directories are created in the working directory; read the
+OpenPiton simulation manual available in the distribution to get more details
+on all the commands.
+
+
 ## Sync job data between clusters
 
 For a typical EDA job you would need to make sure that designs and libraries
@@ -334,6 +354,9 @@ And you can execute this using
 which will kick off jobs across the cluster.
     
 You can use `sinfo` and `squeue` to see progress with the "burst" cluster resources.
+
+Reproduce the test regressions from the blog using the steps you followed for
+the "onprem" cluster.
 
 
 ## Cleaning up
