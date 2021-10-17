@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cluster_name = "edafarm"
+cluster_name = "onprem"
 project      = "<project>"
 zone         = "us-central1-f"
 
