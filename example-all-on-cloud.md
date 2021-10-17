@@ -44,28 +44,6 @@ for this project.
 
 You will also need to enable the Compute Engine (GCE) service for this account
 
-You need to enable Compute Engine and Filestore services as enabling these APIs
-allows you to create the required resources. It is likely that a central
-organization such as the IT organization may ultimately provide this
-functionality, but to run the example successfully, you need to enable the
-required APIs using GCP's intuitive APIs.
-
-You can enable APIs by navigating to the APIs view from the dashboard view.
-
-
-![Navigate to APIs Overview](images/APIs2.PNG)
-
-
-Search for 'Compute' and 'Filestore' and enable these APIs. After successful
-enabling of APIs, you should be able to confirm it in the Console:
-
-![Confirm Compute Engine API is enabled](images/compute.PNG)
-
-
-![Confirm Filestore API is enabled](images/filestore.PNG)
-
-Alternatively, you can also click the link below for enabling the required APIs.
-
 [Enable Example Services](https://console.cloud.google.com/flows/enableapi?apiid=compute.googleapis.com,file.googleapis.com,cloudresourcemanager.googleapis.com)
     
 Next, make sure the project you just created is selected in the top of the
