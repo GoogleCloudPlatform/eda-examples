@@ -17,8 +17,8 @@ cluster_name = "edafarm"
 project      = "<project>"
 zone         = "us-central1-f"
 
-# network_name            = "<existing network name>"
-# subnetwork_name         = "<existing subnetwork name>"
+network_name            = "default"
+subnetwork_name         = "default"
 # shared_vpc_host_project = "<vpc host project>"
 
 # disable_controller_public_ips = true
@@ -117,7 +117,7 @@ partitions = [
     gpu_type             = null
     network_storage      = []
     preemptible_bursting = false
-    vpc_subnet           = null
+    vpc_subnet           = "default"
     exclusive            = false
     enable_placement     = false
     regional_capacity    = false
