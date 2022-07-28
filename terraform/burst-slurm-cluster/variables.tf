@@ -264,19 +264,3 @@ variable "suspend_time" {
 variable "zone" {
   type = string
 }
-
-#output "login_network_ips" {
-  #value = "${module.slurm_cluster_login.instance_network_ips}"
-#}
-output "login_message" {
-  value = <<-EOS
-    Slurm is currently being installed/configured in the background
-    Partitions will be marked down until the compute image has been created.
-    This usually takes ~5 mins, but depends on cluster settings.
-
-    /home on the controller and login nodes will be mounted over the existing
-    /home. Any changes in /home will be hidden. Please wait until the
-    installation is complete before making changes in your home directory.
-
-  EOS
-}
