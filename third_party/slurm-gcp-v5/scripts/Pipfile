@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "2"
+pyyaml = "6"
+addict = "2"
+google-api-python-client = "2"
+google-cloud-bigquery = "3"
+google-cloud-pubsub = "2"
+ipython = "7"
+more-executors = "2"
+
+[dev-packages]
+
+[requires]
+# Supports: python >= 3.6
+# REF: https://github.com/pypa/pipenv/issues/1050
+python_version = "3"
