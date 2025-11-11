@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# SLURM Job Script for Hspice Application Validation
+#
+# This script requests 2 full nodes and verifies that the hspice
+# executable can be found and launched successfully by checking its version.
+# This validation step usually succeeds even if no floating license is available.
+
+# --- SLURM Directives ---
+# Set the job name
+#SBATCH --job-name=hspice_val_2node
+# Request 2 full compute nodes
+#SBATCH --nodes=2
+# Allocate 1 task per node (total of 2 tasks for srun if needed)
+#SBATCH --ntasks-per-node=1
+# Specify the partition/queue to use (CHANGE THIS TO YOUR CLUSTER'S PARTITION)
+#SBATCH --partition=h4d
+# Set a short time limit for validation
+#SBATCH --time=0-00:10:00
+# Set memory limit (4GB is typically enough for a validation run)
+#SBATCH --mem=4G
+# Define output file for standard output
+#SBATCH --output=hspice_val_%j.out
+# Define error file for standard error
+#SBATCH --error=hspice_val_%j.err
+
+# --- Environment Setup ---
+
+echo "--- Job Start Information ---"
+echo "Starting job on $(hostname) at $(date)"
+echo "SLURM Job ID: $SLURM_JOB_ID"
+echo "Requested Nodes: $SLURM_JOB_NUM_NODES"
+echo "------------------------------"
+
+# 1. Load the required Synopsys Hspice module
+# IMPORTANT: Replace 'synopsys/hspice/latest' with the actual module path on your cluster.
+#module purge
+#module load synopsys/hspice/latest
+
+# we use export command instead of module load 
+export HSPICEHOME=/apps/software/synopsys/hspice/X-2025.06-SP1/hspice
+export PATH=/apps/software/synopsys/hspice/X-2025.06-SP1/hspice/bin:$PATH
+
+# Check if the Hspice executable is available
+if command -v hspice &> /dev/null; then
+    echo "Hspice command successfully found after module load."
+else
+    echo "ERROR: Hspice executable not found. Check module path."
+    exit 1
+fi
+
+# 2. Application Validation Run (No License Required)
+# We use 'srun --ntasks=1' to run the command on the first allocated task.
+# The '-V' flag prints the version and exits, validating the executable without
+# consuming a simulation license feature.
+
+echo "Attempting Hspice version check (validation)..."
+srun -l --ntasks=2 hspice -v
+
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "========================================================="
+    echo "SUCCESS: Hspice binary launched and version reported."
+    echo "The application environment and path are correctly configured."
+    echo "========================================================="
+else
+    echo ""
+    echo "========================================================="
+    echo "FAILURE: Hspice validation command returned a non-zero exit code ($?)."
+    echo "Check error log for details. This may indicate a required shared library is missing."
+    echo "========================================================="
+fi
+
+# --- End of Job ---
+echo "Job finished at $(date)"

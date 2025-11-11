@@ -1,32 +1,56 @@
-# EDA Workloads on Google Cloud
+# Google Cloud Platform EDA Example 
 
-Here are examples of template snippets used to spin up Google Cloud resources
-for typical EDA workloads.
+This github repo contains examples for deploying common EDA applications with Google Cloud Platform Cluster Toolkit. 
 
-Examples include:
+1. Creating the HPC cluster for EDA workload
+    1. Slurm Cluster - with latest H4D instance(s)
+    2. Storage - Managed Lustre and Filestore
+        1. Managed Lustre
+        2. Filestore
+2. Synopsys application
+    1. Installation of software
+    2. VCS sample run
+    3. HSPICE sample run
 
-- [All on Cloud](example-all-on-cloud.md) (use this for the
-  [scaling verification blog post](https://cloud.google.com/blog/products/compute/scale-up-your-eda-flows-on-google-cloud))
-- [Burst to Cloud](example-burst-to-cloud.md) (use this for the
-  [hybrid silicon workflows blog post](https://cloud.google.com/blog/products/compute/faster-chip-design-with-hybrid-silicon-workflows))
-- [Standalone EDA VMs](example-standalone-vm.md)
+## Cluster setup
 
-**Please note that these are provided only as examples to help guide
-infrastructure planning and are not intended for use in production. They are
-deliberately simplified for clarity and lack significant details required for
-production-worthy infrastructure implementation.**
+We are using the Google Cloud Platform Cluster Toolkit to create a new cluster. 
 
----
+By using the Cluster Toolkit blueprint yaml:
+```
+h4d-slurm-lustre-crd.yaml
+```
 
-## What's next
+This sample blueprint has Slurm setup with Managed Lustre for H4D instances. Chrome Remote Desktop node is also added to this blueprint. 
 
-There are so many exciting directions to take to learn more about what you've
-done here!
+Once the setup of the Cluster Toolkit, one can run the following 
 
-- Infrastructure.  Learn more about
-  [Cloud](https://cloud.google.com/),
-  [Slurm](https://slurm.schedmd.com/overview.html),
-  High Performance Computing (HPC) on GCP
-  [reference architectures](https://cloud.google.com/solutions/hpc/) and 
-  [posts](https://cloud.google.com/blog/topics/hpc).
+```
+./gcluster deploy -w hpc-slurm-h4d.yaml
+```
+After the cluster setup (about 45mins), login to the slurm login node and we can see the sinfo and lustre file system: 
+
+Slurm cluster:
+```
+$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+h4d*         up   infinite      2  down# slurmh4d-h4dnodeset-[0-1]
+```
+
+Storage: 
+```
+$ df -h
+Filesystem                     Size  Used Avail Use% Mounted on
+devtmpfs                       7.7G     0  7.7G   0% /dev
+tmpfs                          7.7G     0  7.7G   0% /dev/shm
+tmpfs                          7.7G  8.5M  7.7G   1% /run
+tmpfs                          7.7G     0  7.7G   0% /sys/fs/cgroup
+/dev/sda2                       50G   20G   31G  39% /
+/dev/sda1                      200M  5.9M  194M   3% /boot/efi
+tmpfs                          1.6G     0  1.6G   0% /run/user/0
+10.x.x.x@tcp:/lustrefs         35T   22M   35T   1% /data
+10.x.x.x:/homeshare        2.5T     0  2.4T   0% /home
+slurmh4d-controller:/opt/apps   50G   20G   31G  39% /opt/apps
+tmpfs                          1.6G     0  1.6G   0% /run/user/1911945234
+```
 
