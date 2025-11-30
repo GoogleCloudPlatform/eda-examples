@@ -11,7 +11,7 @@ The page has a sample blueprint synopsys-blueprint.yaml which is design for EDA.
 Please update the blueprint with the correct Project ID . Then use the following command to deploy the cluster: 
 
 ```
-./gcluster deploy -w eda-slurm-h4d.yaml
+./gcluster deploy -w synopsys-blueprint.yaml
 ```
 
 At finish, the cluster shall be up and running. It may take about an hour for the whole deployment: 
@@ -48,9 +48,13 @@ vcs_vW-2024.09-SP2-5_linux64.spf.part02
 ## Installation of Synopsys software:
 
 ```
-cd /apps
-mkdir synopsys
-gcloud storage cp gs://[your bucket name]/* . #please update the GCS bucket name
+sudo yum install -y tcsh
+sudo mkdir /apps/synopsys
+sudo chmod 777 /apps/synopsys
+sudo mkdir /apps/synopsys-source
+sudo chmod 777 /apps/synopsys-source
+cd /apps/synopsys-source
+gcloud storage cp gs://<your-software-bucket>/* .
 chmod 755 SynopsysInstaller_v5.9.run
 ./SynopsysInstaller_v5.9.run
 ./installer
@@ -62,7 +66,7 @@ It will find all spf files and install everything
 
 ## License:
 
-SSH to the licensne server:
+SSH to the license server:
 
 Please make the Installer and Synopsys Common Licensing (SCL) binary available in the license server. Run the installer application at finish: one will see this message: 
 
