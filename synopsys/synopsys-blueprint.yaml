@@ -63,6 +63,18 @@ deployment_groups:
       local_mount: /home
 
   - id: appsfs
+    source: modules/file-system/filestore
+    use: [h4d-slurm-net-0]
+    settings:
+      filestore_tier: BASIC_SSD
+      size_gb: 2560
+      filestore_share_name: appshare
+      local_mount: /apps
+
+- group: cluster
+  modules:
+
+  - id: datafs
     source: modules/file-system/managed-lustre
     use: [h4d-slurm-net-0, private_service_access]
     settings:
@@ -81,10 +93,16 @@ deployment_groups:
         fs_type: ext4
         mountpoint: /mnt/lssd
         permissions: "1777"
+      runners:
+      - type: shell
+        destination: install-script.sh
+        content: |
+          #!/bin/bash
+          yum install -y tcsh
 
   - id: remotedesktop
     source: community/modules/remote-desktop/chrome-remote-desktop
-    use: [h4d-slurm-net-0, homefs, appsfs]
+    use: [h4d-slurm-net-0, homefs, appsfs, datafs]
     settings:
       install_nvidia_driver: true
       add_deployment_name_before_prefix: true
@@ -95,7 +113,7 @@ deployment_groups:
 
   - id: license 
     source: modules/compute/vm-instance
-    use: [h4d-slurm-net-0, homefs, appsfs]
+    use: [h4d-slurm-net-0, homefs, appsfs, datafs]
     settings:
       instance_count: 1
       name_prefix: license
@@ -149,7 +167,7 @@ deployment_groups:
 
   - id: slurm_controller
     source: community/modules/scheduler/schedmd-slurm-gcp-v6-controller
-    use: [h4d-slurm-net-0, h4d_partition, slurm_login, homefs, appsfs]
+    use: [h4d-slurm-net-0, h4d_partition, slurm_login, homefs, appsfs, datafs]
     settings:
       enable_controller_public_ips: true
       cloud_parameters:

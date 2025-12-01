@@ -38,8 +38,8 @@ echo "------------------------------"
 #module load synopsys/hspice/latest
 
 # we use export command instead of module load 
-export HSPICEHOME=/apps/software/synopsys/hspice/X-2025.06-SP1/hspice
-export PATH=/apps/software/synopsys/hspice/X-2025.06-SP1/hspice/bin:$PATH
+export HSPICEHOME=/apps/synopsys/hspice/X-2025.06-SP1/hspice
+export PATH=/apps/synopsys/hspice/X-2025.06-SP1/hspice/bin:$PATH
 
 # Check if the Hspice executable is available
 if command -v hspice &> /dev/null; then
